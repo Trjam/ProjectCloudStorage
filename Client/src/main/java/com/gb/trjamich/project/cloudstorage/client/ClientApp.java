@@ -1,51 +1,29 @@
 package com.gb.trjamich.project.cloudstorage.client;
 
-import java.io.*;
-import java.net.Socket;
-import java.nio.charset.StandardCharsets;
 
-public class ClientApp {
-    private final Socket socket;
-    private final DataOutputStream out;
-    private final DataInputStream in;
-    private final ByteArrayOutputStream bos;
+import javafx.application.Application;
+import javafx.event.EventHandler;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
-    public ClientApp() throws IOException {
-        socket = new Socket("localhost", 5678);
-        out = new DataOutputStream(socket.getOutputStream());
-        bos = new ByteArrayOutputStream();
-        in = new DataInputStream(socket.getInputStream());
+public class ClientApp extends Application {
 
-
-        int i =0;
-        while (i<5) {
-            socket.setTcpNoDelay(true);
-            i++;
-            sendMessage("priyom zadacha");
-            //String str = in.readUTF();
-
-            long size = in.;
-            byte[] buffer = new byte[8 * 1024];
-
-            for (int j = 0; j < (size + (buffer.length - 1)) / (buffer.length); j++) {
-                bos.write(buffer, 0,in.read(buffer));
-            }
-            byte[] result = bos.toByteArray();
-            String s = new String(result, StandardCharsets.UTF_8);
-            System.out.println(s);
-        }
+    @Override
+    public void start(Stage primaryStage) throws Exception{
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/client.fxml"));
+        Parent root = fxmlLoader.load();
+        Controler controller = fxmlLoader.getController();
+        primaryStage.setOnCloseRequest(event -> controller.exitAction());
+        primaryStage.setTitle("Geek Chat Client");
+        primaryStage.setScene(new Scene(root, 400, 400));
+        primaryStage.show();
     }
 
-    private void sendMessage(String message) {
-        try {
-            out.writeUTF(message);
-            //out.flush();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static void main(String[] args) throws IOException {
-        new ClientApp();
+    public static void main(String[] args) {
+        launch(args);
     }
 }
+

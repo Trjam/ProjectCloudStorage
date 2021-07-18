@@ -1,4 +1,4 @@
-package com.gb.trjamich.project.cloudstorage.Handlers;
+package com.gb.trjamich.project.cloudstorage.handlers;
 
 import java.sql.*;
 

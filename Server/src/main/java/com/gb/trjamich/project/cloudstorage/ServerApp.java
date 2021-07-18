@@ -1,7 +1,9 @@
 package com.gb.trjamich.project.cloudstorage;
 
-import com.gb.trjamich.project.cloudstorage.Handlers.SQLHandler;
-import com.gb.trjamich.project.cloudstorage.Handlers.UserHandler;
+import com.gb.trjamich.project.cloudstorage.classes.Response;
+import com.gb.trjamich.project.cloudstorage.handlers.NavigateHandler;
+import com.gb.trjamich.project.cloudstorage.handlers.SQLHandler;
+import com.gb.trjamich.project.cloudstorage.handlers.AuthHandler;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
@@ -32,14 +34,11 @@ public class ServerApp {
                         protected void initChannel(Channel channel) throws Exception {
                             SQLHandler.connect();
                             channel.pipeline().addLast(
-                                    //new ObjectDecoder(ClassResolver.cacheDisabled(null)),
-                                    //new ObjectEncoder(),
-                                    //new JsonObjectDecoder(),
-                                    //new DelimiterBasedFrameDecoder(8192, Delimiters.lineDelimiter()),
                                     new LineBasedFrameDecoder(200,true,true),
                                     new StringDecoder(CharsetUtil.UTF_8),
                                     new StringEncoder(CharsetUtil.UTF_8),
-                                    new UserHandler()
+                                    new AuthHandler(),
+                                    new NavigateHandler()
                                     //new DownloadHandler()
                             );
                         }
@@ -57,6 +56,14 @@ public class ServerApp {
             auth.shutdownGracefully();
             worker.shutdownGracefully();
         }
+    }
+
+    public static void sendResponse (Response response) {
+
+    }
+
+    public static void sendMessage (String message) {
+
     }
 
     public static void main(String[] args) {
