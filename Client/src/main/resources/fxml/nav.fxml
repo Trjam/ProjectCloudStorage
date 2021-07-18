@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import java.net.URL?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+
+<VBox xmlns="http://javafx.com/javafx"
+          xmlns:fx="http://javafx.com/fxml"
+          fx:controller="com.gb.trjamich.project.cloudstorage.client.NavigationController"
+          spacing="5">
+
+    <stylesheets>
+        <URL value="@/css/style.css"/>
+    </stylesheets>
+
+    <padding>
+        <Insets top="7" right="7" bottom="7" left="7"/>
+    </padding>
+
+    <HBox minHeight="30">
+        <Button contentDisplay="TOP" mnemonicParsing="false" minWidth="85" text="Login" onAction="#startLogin"/>
+    </HBox>
+
+    <HBox spacing="5" VBox.vgrow="ALWAYS">
+        <HBox HBox.hgrow="ALWAYS"
+              alignment="CENTER_LEFT">
+            <ListView HBox.hgrow="ALWAYS">
+
+            </ListView>
+        </HBox>
+        <VBox spacing="10" alignment="CENTER">
+            <Button contentDisplay="TOP" mnemonicParsing="false" minWidth="85" text="Upload">
+                <graphic>
+                    <ImageView fitWidth="80" fitHeight="30" pickOnBounds="true" preserveRatio="true">
+                        <image>
+                            <Image url="@/images/arrow-upload.png"/>
+                        </image>
+                    </ImageView>
+                </graphic>
+            </Button>
+            <Button contentDisplay="TOP" mnemonicParsing="false" text="Download">
+                <graphic>
+                    <ImageView fitWidth="80" fitHeight="30" pickOnBounds="true" preserveRatio="true">
+                        <image>
+                            <Image url="@/images/arrow-download.png"/>
+                        </image>
+                    </ImageView>
+                </graphic>
+            </Button>
+        </VBox>
+        <HBox HBox.hgrow="ALWAYS">
+            <ListView HBox.hgrow="ALWAYS">
+
+            </ListView>
+        </HBox>
+    </HBox>
+
+    <HBox minHeight="30">
+
+    </HBox>
+</VBox>
