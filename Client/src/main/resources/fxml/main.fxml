@@ -9,7 +9,7 @@
 
 <VBox xmlns="http://javafx.com/javafx"
           xmlns:fx="http://javafx.com/fxml"
-          fx:controller="com.gb.trjamich.project.cloudstorage.client.NavigationController"
+          fx:controller="com.gb.trjamich.project.cloudstorage.client.controllers.MainController"
           spacing="5">
 
     <stylesheets>
@@ -20,8 +20,8 @@
         <Insets top="7" right="7" bottom="7" left="7"/>
     </padding>
 
-    <HBox minHeight="30">
-        <Button contentDisplay="TOP" mnemonicParsing="false" minWidth="85" text="Login" onAction="#startLogin"/>
+    <HBox minHeight="30" alignment="CENTER_RIGHT">
+        <Button alignment="CENTER" contentDisplay="RIGHT" mnemonicParsing="false" minWidth="85" text="Login" onAction="#startLogin"/>
     </HBox>
 
     <HBox spacing="5" VBox.vgrow="ALWAYS">

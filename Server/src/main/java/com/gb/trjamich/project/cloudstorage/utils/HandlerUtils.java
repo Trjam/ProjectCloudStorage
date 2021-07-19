@@ -1,6 +1,9 @@
-package com.gb.trjamich.project.cloudstorage.classes;
+package com.gb.trjamich.project.cloudstorage.utils;
 
+import com.gb.trjamich.project.cloudstorage.classes.Request;
+import com.gb.trjamich.project.cloudstorage.classes.Response;
 import com.google.gson.Gson;
+import io.netty.channel.ChannelHandlerContext;
 
 public class HandlerUtils {
 
@@ -29,5 +32,11 @@ public class HandlerUtils {
         str = str.trim();
         Gson g = new Gson();
         return g.fromJson(str, Request.class);
+    }
+
+    public void sendResponse(ChannelHandlerContext ctx, Response response) {
+        Gson g = new Gson();
+        String msg = g.toJson(response, Response.class);
+        ctx.writeAndFlush(msg);
     }
 }

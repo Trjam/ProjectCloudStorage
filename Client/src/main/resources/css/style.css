@@ -14,6 +14,13 @@
     -fx-font-weight:bold;
 }
 
+.label {
+    -fx-font-smoothing-type: lcd;
+    -fx-text-fill:#F1EEEE;
+    -fx-font-size: 15;
+    -fx-font-weight:bold;
+}
+
 
 
 

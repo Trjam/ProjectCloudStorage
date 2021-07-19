@@ -1,9 +1,7 @@
 package com.gb.trjamich.project.cloudstorage.handlers;
 
-import com.gb.trjamich.project.cloudstorage.classes.HandlerUtils;
+import com.gb.trjamich.project.cloudstorage.utils.HandlerUtils;
 import com.gb.trjamich.project.cloudstorage.classes.Request;
-import com.gb.trjamich.project.cloudstorage.classes.Response;
-import com.google.gson.Gson;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.channel.socket.SocketChannel;
@@ -12,18 +10,17 @@ import java.util.concurrent.ConcurrentLinkedDeque;
 
 public class AuthHandler extends ChannelInboundHandlerAdapter {
     public static final ConcurrentLinkedDeque<SocketChannel> channels = new ConcurrentLinkedDeque<>();
-    public static ChannelHandlerContext ctx;
     private final HandlerUtils utils = new HandlerUtils();
 
     @Override
-    public void channelActive(ChannelHandlerContext chc) {
-        System.out.println("client connected: " + chc.channel());
-        channels.add((SocketChannel) chc.channel());
+    public void channelActive(ChannelHandlerContext ctx) {
+        System.out.println("client connected: " + ctx.channel());
+        channels.add((SocketChannel) ctx.channel());
     }
 
     @Override
-    public void channelRead(ChannelHandlerContext chc, Object msg) {
-        ctx = chc;
+    public void channelRead(ChannelHandlerContext ctx, Object msg) {
+
         Request request = utils.getRequest(msg);
 
         if (request.getReqType().equals("auth")) {
@@ -33,9 +30,9 @@ public class AuthHandler extends ChannelInboundHandlerAdapter {
                             request.getUser().getLogin(),
                             request.getUser().getPassword()))
                     {
-                        sendResponse(utils.authOkResponse(request));
+                        utils.sendResponse(ctx,utils.authOkResponse(request));
                     } else {
-                        sendResponse(utils.authFaultResponse("Wrong login or password", request));
+                        utils.sendResponse(ctx,utils.authFaultResponse("Wrong login or password", request));
                     }
                     break;
                 case "register":
@@ -44,9 +41,9 @@ public class AuthHandler extends ChannelInboundHandlerAdapter {
                             request.getUser().getPassword(),
                             request.getUser().getNickname()))
                     {
-                        sendResponse(utils.authOkResponse(request));
+                        utils.sendResponse(ctx,utils.authOkResponse(request));
                     } else {
-                        sendResponse(utils.authFaultResponse("Login or nickname already exist", request));
+                        utils.sendResponse(ctx,utils.authFaultResponse("Login or nickname already exist", request));
                     }
                     break;
                 case "logout":
@@ -60,20 +57,13 @@ public class AuthHandler extends ChannelInboundHandlerAdapter {
     }
 
     @Override
-    public void channelReadComplete(ChannelHandlerContext chc) {
+    public void channelReadComplete(ChannelHandlerContext ctx) {
         ctx.flush();
     }
 
     @Override
-    public void exceptionCaught(ChannelHandlerContext chc, Throwable cause) {
+    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
         cause.printStackTrace();
-        chc.close();
+        ctx.close();
     }
-
-    public void sendResponse(Response response) {
-        Gson g = new Gson();
-        String msg = g.toJson(response, Response.class);
-        ctx.writeAndFlush(msg);
-    }
-
 }

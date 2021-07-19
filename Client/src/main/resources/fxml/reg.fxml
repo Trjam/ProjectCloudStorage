@@ -8,7 +8,7 @@
 
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.text.Text?>
-<VBox fx:controller="client.RegController"
+<VBox fx:controller="com.gb.trjamich.project.cloudstorage.client.controllers.RegController"
       xmlns:fx="http://javafx.com/fxml" alignment="center" spacing="10">
     <stylesheets>
         <URL value="@/css/style.css"/>
