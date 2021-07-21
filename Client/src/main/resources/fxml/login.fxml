@@ -3,7 +3,7 @@
 <?import javafx.scene.layout.*?>
 
 <?import java.net.URL?>
-<GridPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.gb.trjamich.project.cloudstorage.client.controllers.LoginController" hgap="10" vgap="10" alignment="CENTER">
+<GridPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.gb.trjamich.project.cloudstorage.client.controllers.AuthController" hgap="10" vgap="10" alignment="CENTER">
 
     <stylesheets>
         <URL value="@/css/style.css"/>

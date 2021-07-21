@@ -1,6 +1,7 @@
 package com.gb.trjamich.project.cloudstorage.client.controllers;
 
 import javafx.application.Platform;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
@@ -17,7 +18,7 @@ import java.util.ResourceBundle;
 public class MainController implements Initializable {
     private Stage stage;
     private Stage loginStage;
-    private LoginController loginController;
+    private AuthController authController;
 
     private Socket socket;
 
@@ -29,18 +30,14 @@ public class MainController implements Initializable {
             stage.setOnCloseRequest(event -> {
                 System.out.println("bye");
                 if (socket != null && !socket.isClosed()) {
-/*                    try {
-                       // out.writeUTF("/q");
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }*/
+
                 }
             });
         });
         //setAuthenticated(false);
     }
 
-    private void createRegWindow() {
+    private void createLoginWindow() {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/login.fxml"));
             Parent root = fxmlLoader.load();
@@ -52,20 +49,22 @@ public class MainController implements Initializable {
             loginStage.initModality(Modality.APPLICATION_MODAL);
             loginStage.initStyle(StageStyle.UTILITY);
 
-            loginController = fxmlLoader.getController();
-            loginController.setController(this);
+            authController = fxmlLoader.getController();
+            authController.setController(this);
 
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public void startLogin() {
+    @FXML
+    private void startLogin() {
         if (loginStage == null) {
-            createRegWindow();
+            createLoginWindow();
         }
         Platform.runLater(() -> {
             loginStage.show();
         });
     }
+
 }

@@ -20,7 +20,7 @@ public class ClientApp extends Application {
         primaryStage.show();
     }
 
-    public static void main(String[] args) {
+    public static void startClient(String[] args) {
         launch(args);
     }
 }

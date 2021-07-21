@@ -22,28 +22,29 @@ public class AuthHandler extends ChannelInboundHandlerAdapter {
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
 
         Request request = utils.getRequest(msg);
+        System.out.println(msg);
 
         if (request.getReqType().equals("auth")) {
             switch (request.getOperation()) {
                 case "login":
+                    System.out.println("login start");
                     if (SQLHandler.checkPassword(
-                            request.getUser().getLogin(),
-                            request.getUser().getPassword()))
-                    {
-                        utils.sendResponse(ctx,utils.authOkResponse(request));
+                            request.getUser().getPassword(),
+                            request.getUser().getLogin())) {
+                        utils.sendResponse(ctx, utils.authOkResponse(request));
                     } else {
-                        utils.sendResponse(ctx,utils.authFaultResponse("Wrong login or password", request));
+                        System.out.println("login fault");
+                        utils.sendResponse(ctx, utils.authFaultResponse("Wrong login or password", request));
                     }
                     break;
                 case "register":
                     if (SQLHandler.registration(
                             request.getUser().getLogin(),
                             request.getUser().getPassword(),
-                            request.getUser().getNickname()))
-                    {
-                        utils.sendResponse(ctx,utils.authOkResponse(request));
+                            request.getUser().getNickname())) {
+                        utils.sendResponse(ctx, utils.authOkResponse(request));
                     } else {
-                        utils.sendResponse(ctx,utils.authFaultResponse("Login or nickname already exist", request));
+                        utils.sendResponse(ctx, utils.authFaultResponse("Login or nickname already exist", request));
                     }
                     break;
                 case "logout":

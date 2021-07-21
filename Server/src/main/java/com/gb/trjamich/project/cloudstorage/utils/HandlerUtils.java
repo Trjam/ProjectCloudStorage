@@ -37,6 +37,8 @@ public class HandlerUtils {
     public void sendResponse(ChannelHandlerContext ctx, Response response) {
         Gson g = new Gson();
         String msg = g.toJson(response, Response.class);
-        ctx.writeAndFlush(msg);
+        ctx.write(msg);
+        ctx.flush();
+        ctx.close();
     }
 }

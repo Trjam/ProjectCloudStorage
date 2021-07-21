@@ -34,7 +34,7 @@ public class ServerApp {
                         protected void initChannel(Channel channel) throws Exception {
                             SQLHandler.connect();
                             channel.pipeline().addLast(
-                                    new LineBasedFrameDecoder(200,true,true),
+                                    //new LineBasedFrameDecoder(1000,true,true),
                                     new StringDecoder(CharsetUtil.UTF_8),
                                     new StringEncoder(CharsetUtil.UTF_8),
                                     new AuthHandler(),

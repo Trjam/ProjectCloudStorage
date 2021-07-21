@@ -25,7 +25,7 @@ public class SQLHandler {
         psGetNickname = connection.prepareStatement("SELECT nickname FROM users WHERE login = ? AND password = ?;");
         psRegistration = connection.prepareStatement("INSERT INTO users(login, password, nickname) VALUES (? ,? ,? );");
         psChangeNick = connection.prepareStatement("UPDATE users SET nickname = ? WHERE login = ?;");
-        psCheckPassword = connection.prepareStatement("SELECT password FROM users where login = ?;");
+        psCheckPassword = connection.prepareStatement("SELECT password FROM users where login = ? AND password = ?;");
     }
 
     public static String getNicknameByLoginAndPassword(String login, String password) {
@@ -70,9 +70,10 @@ public class SQLHandler {
 
     public static boolean checkPassword (String password, String login) {
         try {
-            psCheckPassword.setString(1, login);
+            psCheckPassword.setString(2, password);
+            psCheckPassword.setString(1,login);
             ResultSet rs = psCheckPassword.executeQuery();
-
+            //System.out.println(rs.getString(1));
             return password.equals(rs.getString(1));
 
         } catch (SQLException e) {
