@@ -1,7 +1,0 @@
-auth login password
-logout
-reg login password nickname
-cmd userid command ->   navigation      (getUserRootPath(userid) cmd currentPath)
-                        file cmd        (getUserRootPath(userid) cmd currentPath path)
-                        upload cmd      (getUserRootPath(userid) cmd path)
-                        download cmd    (getUserRootPath(userid) cmd path)
