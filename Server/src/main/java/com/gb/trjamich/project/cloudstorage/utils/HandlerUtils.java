@@ -1,8 +1,8 @@
 package com.gb.trjamich.project.cloudstorage.utils;
 
-import com.gb.trjamich.project.cloudstorage.classes.Request;
-import com.gb.trjamich.project.cloudstorage.classes.Response;
 import com.google.gson.Gson;
+import common.Request;
+import common.Response;
 import io.netty.channel.ChannelHandlerContext;
 
 public class HandlerUtils {

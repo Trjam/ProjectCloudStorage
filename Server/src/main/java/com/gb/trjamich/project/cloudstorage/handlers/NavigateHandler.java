@@ -1,7 +1,7 @@
 package com.gb.trjamich.project.cloudstorage.handlers;
 
 import com.gb.trjamich.project.cloudstorage.utils.HandlerUtils;
-import com.gb.trjamich.project.cloudstorage.classes.Request;
+import common.Request;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.channel.socket.SocketChannel;

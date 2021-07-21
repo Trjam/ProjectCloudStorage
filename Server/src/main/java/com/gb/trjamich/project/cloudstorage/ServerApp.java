@@ -1,9 +1,9 @@
 package com.gb.trjamich.project.cloudstorage;
 
-import com.gb.trjamich.project.cloudstorage.classes.Response;
 import com.gb.trjamich.project.cloudstorage.handlers.NavigateHandler;
 import com.gb.trjamich.project.cloudstorage.handlers.SQLHandler;
 import com.gb.trjamich.project.cloudstorage.handlers.AuthHandler;
+import common.Response;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
@@ -11,7 +11,6 @@ import io.netty.channel.ChannelInitializer;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
-import io.netty.handler.codec.LineBasedFrameDecoder;
 import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
 import io.netty.util.CharsetUtil;

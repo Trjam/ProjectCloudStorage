@@ -1,4 +1,4 @@
-package com.gb.trjamich.project.cloudstorage.client.classes;
+package common;
 
 import lombok.Builder;
 import lombok.Data;

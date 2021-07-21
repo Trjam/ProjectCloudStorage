@@ -1,6 +1,9 @@
 package com.gb.trjamich.project.cloudstorage.client.classes;
 
 import com.google.gson.Gson;
+import common.Request;
+import common.Response;
+import common.User;
 
 import java.io.*;
 import java.net.Socket;
