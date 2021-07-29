@@ -1,0 +1,5 @@
+.table-view .column-header .label {
+    -fx-font-size: 13;
+    -fx-text-fill: rgba(20, 12, 97, 0.58);
+    /*-fx-font-weight: bold;*/
+}

@@ -35,7 +35,7 @@
               spacing="10">
             <children>
                 <Button fx:id="okButton" text="Ok" onAction="#tryToLogin"/>
-                <Button fx:id="cancelButton" text="Cancel"/>
+                <Button fx:id="cancelButton" text="Cancel" onAction="#closeLogin"/>
             </children>
         </HBox>
     </children>

@@ -22,6 +22,7 @@ public class ClientApp extends Application {
 
     public static void startClient(String[] args) {
         launch(args);
+
     }
 }
 

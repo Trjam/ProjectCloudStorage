@@ -1,6 +1,7 @@
 @import "button.css";
 @import "textarea.css";
 @import "textfield.css";
+@import "tableview.css";
 
 .root {
   -fx-font-size: 13;

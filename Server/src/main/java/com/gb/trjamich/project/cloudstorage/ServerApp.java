@@ -11,6 +11,9 @@ import io.netty.channel.ChannelInitializer;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.handler.codec.DelimiterBasedFrameDecoder;
+import io.netty.handler.codec.Delimiters;
+import io.netty.handler.codec.LineBasedFrameDecoder;
 import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
 import io.netty.util.CharsetUtil;
@@ -33,8 +36,9 @@ public class ServerApp {
                         protected void initChannel(Channel channel) throws Exception {
                             SQLHandler.connect();
                             channel.pipeline().addLast(
-                                    //new LineBasedFrameDecoder(1000,true,true),
+                                    //new LineBasedFrameDecoder(8192),
                                     new StringDecoder(CharsetUtil.UTF_8),
+                                    //new DelimiterBasedFrameDecoder(8192, Delimiters.lineDelimiter()),
                                     new StringEncoder(CharsetUtil.UTF_8),
                                     new AuthHandler(),
                                     new NavigateHandler()

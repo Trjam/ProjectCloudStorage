@@ -1,13 +1,29 @@
 package com.gb.trjamich.project.cloudstorage.utils;
 
 import com.google.gson.Gson;
+import common.FileList;
 import common.Request;
 import common.Response;
 import io.netty.channel.ChannelHandlerContext;
 
+import java.nio.file.Path;
+import java.util.List;
+import java.util.UUID;
+
+import static com.gb.trjamich.project.cloudstorage.handlers.NavigateHandler.serverRoot;
+
 public class HandlerUtils {
 
     public HandlerUtils() {
+    }
+
+    public Response authLoginOkResponse(Request request, UUID uuid) {
+        return Response.builder()
+                .reqType(request.getReqType())
+                .operation(request.getOperation())
+                .status("ok")
+                .token(uuid)
+                .build();
     }
 
     public Response authOkResponse(Request request) {
@@ -27,6 +43,17 @@ public class HandlerUtils {
                 .build();
     }
 
+    public Response navOkResponse(Request request, List<FileList> list, Path currentServerPath){
+        return Response.builder()
+                .reqType(request.getReqType())
+                .operation(request.getOperation())
+                .list(list)
+                .cSP(currentServerPath.toString()
+                        .replace(Path.of(serverRoot.toString(), request.getUser().getLogin()).toString(),"home"))
+                .status("ok")
+                .build();
+    }
+
     public Request getRequest(Object msg) {
         String str = (String) msg;
         str = str.trim();
@@ -37,8 +64,10 @@ public class HandlerUtils {
     public void sendResponse(ChannelHandlerContext ctx, Response response) {
         Gson g = new Gson();
         String msg = g.toJson(response, Response.class);
-        ctx.write(msg);
+        ctx.write(msg+"\r\n");
         ctx.flush();
-        ctx.close();
+        System.out.println(ctx.channel().isActive());
+        //ctx.close();
+        System.out.println(ctx.channel().isActive());
     }
 }

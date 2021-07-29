@@ -8,9 +8,9 @@
 <?import javafx.scene.image.Image?>
 
 <VBox xmlns="http://javafx.com/javafx"
-          xmlns:fx="http://javafx.com/fxml"
-          fx:controller="com.gb.trjamich.project.cloudstorage.client.controllers.MainController"
-          spacing="5">
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.gb.trjamich.project.cloudstorage.client.controllers.MainController"
+      spacing="5">
 
     <stylesheets>
         <URL value="@/css/style.css"/>
@@ -20,16 +20,68 @@
         <Insets top="7" right="7" bottom="7" left="7"/>
     </padding>
 
-    <HBox minHeight="30" alignment="CENTER_RIGHT">
-        <Button alignment="CENTER" contentDisplay="RIGHT" mnemonicParsing="false" minWidth="85" text="Login" onAction="#startLogin"/>
+    <HBox minHeight="30" alignment="CENTER_RIGHT" spacing="8">
+        <StackPane>
+            <Button fx:id="regBtn" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" minWidth="85"
+                    text="Registration"/>
+        </StackPane>
+        <StackPane>
+            <Button fx:id="loginBtn" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" minWidth="85"
+                    text="Login" onAction="#startLogin"/>
+            <Button fx:id="logoutBtn" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" minWidth="85"
+                    text="Logout" visible="false"/>
+        </StackPane>
+    </HBox>
+
+    <HBox spacing="5">
+        <HBox HBox.hgrow="ALWAYS" alignment="CENTER_LEFT" spacing="8">
+            <Button alignment="CENTER" text="C"/>
+            <Button alignment="CENTER" text="P"/>
+            <Button alignment="CENTER" text="M"/>
+            <Button alignment="CENTER" text="R"/>
+            <Button fx:id="mkDirClient" alignment="CENTER" text="Mk" onAction="#startCreateDir"/>
+            <Button alignment="CENTER" text="D"/>
+        </HBox>
+        <HBox alignment="CENTER_RIGHT">
+            <Label text="Search: " style="-fx-font-size: 14"/>
+            <TextField/>
+        </HBox>
+        <VBox spacing="10" alignment="CENTER" minWidth="85"/>
+        <HBox HBox.hgrow="ALWAYS" alignment="CENTER_LEFT" spacing="8">
+            <Button alignment="CENTER" text="C"/>
+            <Button alignment="CENTER" text="P"/>
+            <Button alignment="CENTER" text="M"/>
+            <Button alignment="CENTER" text="R"/>
+            <Button alignment="CENTER" text="Mk"/>
+            <Button alignment="CENTER" text="D"/>
+        </HBox>
+        <HBox alignment="CENTER_RIGHT">
+            <Label text="Search: " style="-fx-font-size: 14"/>
+            <TextField/>
+        </HBox>
+    </HBox>
+
+    <HBox spacing="5">
+        <HBox HBox.hgrow="ALWAYS" alignment="CENTER_LEFT">
+            <Label text="Path: " style="-fx-font-size: 14"/>
+            <TextField fx:id="clientPath" editable="false" HBox.hgrow="ALWAYS"/>
+        </HBox>
+        <VBox spacing="10" alignment="CENTER" minWidth="85"/>
+        <HBox HBox.hgrow="ALWAYS" alignment="CENTER">
+            <Label text="Path: " style="-fx-font-size: 14"/>
+            <TextField fx:id="serverPath" editable="false" HBox.hgrow="ALWAYS"/>
+        </HBox>
     </HBox>
 
     <HBox spacing="5" VBox.vgrow="ALWAYS">
-        <HBox HBox.hgrow="ALWAYS"
-              alignment="CENTER_LEFT">
-            <ListView HBox.hgrow="ALWAYS">
-
-            </ListView>
+        <HBox HBox.hgrow="ALWAYS" alignment="CENTER_LEFT" VBox.vgrow="ALWAYS">
+            <TableView fx:id="tableView" HBox.hgrow="ALWAYS" onMouseClicked="#changeCurrentPath">
+                <columns>
+                    <TableColumn fx:id="columnName" text="Имя" prefWidth="250"/>
+                    <TableColumn fx:id="columnType" text="Тип" prefWidth="150"/>
+                    <TableColumn fx:id="columnSize" text="Размер" prefWidth="100"/>
+                </columns>
+            </TableView>
         </HBox>
         <VBox spacing="10" alignment="CENTER">
             <Button contentDisplay="TOP" mnemonicParsing="false" minWidth="85" text="Upload">
@@ -52,13 +104,13 @@
             </Button>
         </VBox>
         <HBox HBox.hgrow="ALWAYS">
-            <ListView HBox.hgrow="ALWAYS">
-
-            </ListView>
+            <TableView fx:id="tableServerView" HBox.hgrow="ALWAYS" onMouseClicked="#changeCurrentServerPath">
+                <columns>
+                    <TableColumn fx:id="columnServerName" text="Имя" minWidth="250"/>
+                    <TableColumn fx:id="columnServerType" text="Тип" prefWidth="150"/>
+                    <TableColumn fx:id="columnServerSize" text="Размер" prefWidth="100"/>
+                </columns>
+            </TableView>
         </HBox>
-    </HBox>
-
-    <HBox minHeight="30">
-
     </HBox>
 </VBox>
