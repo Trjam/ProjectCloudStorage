@@ -16,4 +16,5 @@ public class Request {
     String targetPath;
     UUID token;
     User user;
+    long fileLength;
 }

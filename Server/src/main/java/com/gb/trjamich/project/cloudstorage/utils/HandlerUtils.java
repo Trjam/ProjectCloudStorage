@@ -6,6 +6,7 @@ import common.Request;
 import common.Response;
 import io.netty.channel.ChannelHandlerContext;
 
+import java.io.File;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.UUID;
@@ -34,7 +35,7 @@ public class HandlerUtils {
                 .build();
     }
 
-    public Response authFaultResponse(String info, Request request) {
+    public Response faultResponse(String info, Request request) {
         return Response.builder()
                 .reqType(request.getReqType())
                 .operation(request.getOperation())
@@ -66,8 +67,20 @@ public class HandlerUtils {
         String msg = g.toJson(response, Response.class);
         ctx.write(msg+"\r\n");
         ctx.flush();
-        System.out.println(ctx.channel().isActive());
-        //ctx.close();
-        System.out.println(ctx.channel().isActive());
+    }
+
+    public Path getReqPath (Request request) {
+        return Path.of(request.getPath()
+                .replace("home", serverRoot.toString() + File.separator + request.getUser().getLogin()));
+    }
+
+    public Path getReqTrgPath (Request request) {
+        return Path.of(request.getTargetPath()
+                .replace("home", serverRoot.toString() + File.separator + request.getUser().getLogin()));
+    }
+
+    public Path getReqSrcPath(Request request) {
+        return Path.of(request.getSrcPath()
+                .replace("home", serverRoot.toString() + File.separator + request.getUser().getLogin()));
     }
 }

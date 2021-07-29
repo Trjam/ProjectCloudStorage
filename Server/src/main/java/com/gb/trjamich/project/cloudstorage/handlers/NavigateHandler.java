@@ -13,6 +13,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedDeque;
@@ -39,21 +40,56 @@ public class NavigateHandler extends ChannelInboundHandlerAdapter {
                         e.printStackTrace();
                     }
                 }
+                if (request.getTargetPath() != null) {
+                    currentServerPath= utils.getReqTrgPath(request);
+                }
                 utils.sendResponse(ctx, utils.navOkResponse(request, getFileList(currentServerPath), currentServerPath));
 
             } else if (request.getOperation().equals("cd")) {
-                System.out.println(Path.of(request.getTargetPath()
-                        .replace("home", serverRoot.toString() + File.separator + request.getUser().getLogin())));
-                if (Files.exists(Path.of(request.getTargetPath()
-                        .replace("home", serverRoot.toString() + File.separator + request.getUser().getLogin())))) {
-                    currentServerPath = Path.of(request.getTargetPath()
-                            .replace("home", serverRoot.toString() + File.separator + request.getUser().getLogin()));
+                if (Files.exists(utils.getReqTrgPath(request))) {
+                    currentServerPath = utils.getReqTrgPath(request);
                     utils.sendResponse(ctx, utils.navOkResponse(request, getFileList(currentServerPath), currentServerPath));
                 }else{
-                    System.out.println("miss");
+                    utils.sendResponse(ctx, utils.faultResponse("Something go wrong", request));
                 }
-            } else if (request.getOperation().equals("view")) {     //??
-
+            } else if (request.getOperation().equals("mkDir")) {
+                if (!Files.exists(utils.getReqTrgPath(request))) {
+                    try {
+                        Files.createDirectory(utils.getReqTrgPath(request));
+                        currentServerPath= utils.getReqPath(request);
+                        utils.sendResponse(ctx, utils.navOkResponse(request, getFileList(currentServerPath), currentServerPath));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    utils.sendResponse(ctx, utils.faultResponse("Directory with such name already exist", request));
+                }
+            } else if (request.getOperation().equals("del")) {
+                if (Files.exists(utils.getReqTrgPath(request))) {
+                    try {
+                        Files.delete(utils.getReqTrgPath(request));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    currentServerPath= utils.getReqPath(request);
+                    utils.sendResponse(ctx, utils.navOkResponse(request, getFileList(currentServerPath), currentServerPath));
+                } else {
+                    utils.sendResponse(ctx, utils.faultResponse("No such file or directory", request));
+                }
+            } else if (request.getOperation().equals("ren")) {
+                if (Files.exists(utils.getReqSrcPath(request))) {
+                    try {
+                        System.out.println(utils.getReqSrcPath(request));
+                        System.out.println(utils.getReqTrgPath(request));
+                        Files.move(utils.getReqSrcPath(request), utils.getReqTrgPath(request), StandardCopyOption.REPLACE_EXISTING);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    currentServerPath= utils.getReqPath(request);
+                    utils.sendResponse(ctx, utils.navOkResponse(request, getFileList(currentServerPath), currentServerPath));
+                } else {
+                    utils.sendResponse(ctx, utils.faultResponse("No such file or directory", request));
+                }
             }
 
         } else {

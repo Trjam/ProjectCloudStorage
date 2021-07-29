@@ -26,8 +26,10 @@ import javafx.stage.StageStyle;
 import java.io.*;
 import java.net.Socket;
 import java.net.URL;
+import java.nio.file.CopyOption;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.*;
 
 import static com.gb.trjamich.project.cloudstorage.client.classes.Network.*;
@@ -43,6 +45,18 @@ public class MainController implements Initializable {
     public TextField clientPath;
     @FXML
     public TextField serverPath;
+    @FXML
+    public Button mkDirClient;
+    @FXML
+    public Button del;
+    @FXML
+    public Button mkDirServer;
+    @FXML
+    public Button delSrv;
+    @FXML
+    public Button renClient;
+    @FXML
+    public Button renSrv;
     @FXML
     private Button loginBtn;
     private Stage stage;
@@ -103,14 +117,14 @@ public class MainController implements Initializable {
 
     private SimpleStringProperty getSimpleStringProperty(TableColumn.CellDataFeatures<FileList, String> c) {
         SimpleStringProperty str = null;
-        if (c.getValue().getFileType().equals("Directory")||c.getValue().getFileName().equals("...")) {
-           str = new SimpleStringProperty("");
-        } else if (c.getValue().getFileSize()<=500) {
-            str = new SimpleStringProperty(String.format("%.2f Кб",c.getValue().getFileSize()*1.0));
-        } else if (c.getValue().getFileSize()>500 && c.getValue().getFileSize()<= 500*1024) {
-            str = new SimpleStringProperty(String.format("%.2f Мб",(c.getValue().getFileSize()/1024.00)));
-        } else if (c.getValue().getFileSize()>500*1024 && c.getValue().getFileSize()<= 500*1024*1024) {
-            str = new SimpleStringProperty(String.format("%.2f Гб",(c.getValue().getFileSize()/(1024.00*1024.00))));
+        if (c.getValue().getFileType().equals("Directory") || c.getValue().getFileName().equals("...")) {
+            str = new SimpleStringProperty("");
+        } else if (c.getValue().getFileSize() <= 500) {
+            str = new SimpleStringProperty(String.format("%.2f Кб", c.getValue().getFileSize() * 1.0));
+        } else if (c.getValue().getFileSize() > 500 && c.getValue().getFileSize() <= 500 * 1024) {
+            str = new SimpleStringProperty(String.format("%.2f Мб", (c.getValue().getFileSize() / 1024.00)));
+        } else if (c.getValue().getFileSize() > 500 * 1024 && c.getValue().getFileSize() <= 500 * 1024 * 1024) {
+            str = new SimpleStringProperty(String.format("%.2f Гб", (c.getValue().getFileSize() / (1024.00 * 1024.00))));
         }
         return str;
     }
@@ -143,10 +157,23 @@ public class MainController implements Initializable {
                                         loginBtn.setVisible(false);
                                         logoutBtn.setVisible(true);
                                     });
-                                    serverFileList();
+                                    new Thread(() -> {
+                                        serverFileList();
+                                        try {
+                                            Thread.sleep(5000);
+                                        } catch (InterruptedException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                    ).start();
+
 
                                 } else if ("fault".equals(response.getStatus())) {
-                                    System.out.println("Login fault: " + response.getInfo());
+                                    Platform.runLater(() -> {
+                                        sendInfoAlert(response.getInfo());
+                                    });
+
+
                                 }
                             } else if (response.getOperation().equals("register")) {
                                 if ("ок".equals(response.getStatus())) {
@@ -168,7 +195,6 @@ public class MainController implements Initializable {
                         System.out.println("основной цикл");
 
 
-
                         String str = readString();
                         System.out.println(str);
                         Response response = new Gson().fromJson(str, Response.class);
@@ -178,11 +204,6 @@ public class MainController implements Initializable {
                                 if ("ok".equals(response.getStatus())) {
                                     currentServerPath = Path.of(response.getCSP());
                                     updateServerTableView(response.getList());
-
-
-
-
-
                                 }
 
                             }
@@ -190,6 +211,33 @@ public class MainController implements Initializable {
                                 if ("ok".equals(response.getStatus())) {
                                     currentServerPath = Path.of(response.getCSP());
                                     updateServerTableView(response.getList());
+                                }
+                            }
+
+                            if ("mkDir".equals(response.getOperation())) {
+                                if ("ok".equals(response.getStatus())) {
+                                    currentServerPath = Path.of(response.getCSP());
+                                    updateServerTableView(response.getList());
+                                } else {
+                                    sendInfoAlert(response.getInfo());
+                                }
+                            }
+
+                            if ("del".equals(response.getOperation())) {
+                                if ("ok".equals(response.getStatus())) {
+                                    currentServerPath = Path.of(response.getCSP());
+                                    updateServerTableView(response.getList());
+                                } else {
+                                    sendInfoAlert(response.getInfo());
+                                }
+                            }
+
+                            if ("ren".equals(response.getOperation())) {
+                                if ("ok".equals(response.getStatus())) {
+                                    currentServerPath = Path.of(response.getCSP());
+                                    updateServerTableView(response.getList());
+                                } else {
+                                    sendInfoAlert(response.getInfo());
                                 }
                             }
 
@@ -315,18 +363,18 @@ public class MainController implements Initializable {
                         .user(User.builder()
                                 .login(clientLogin)
                                 .build())
-                        .build()));
+                        .build(), Request.class));
             } else if (t.getFileType().equals("Directory")) {
                 writeString(new Gson().toJson(Request.builder()
                         .reqType("nav")
                         .operation("cd")
                         .srcPath(currentServerPath.toString())
-                        .targetPath(currentServerPath.toString()+File.separator+ tableServerView.getSelectionModel().getSelectedItem().getFileName())
+                        .targetPath(currentServerPath.toString() + File.separator + t.getFileName())
                         .token(clientUuid)
                         .user(User.builder()
                                 .login(clientLogin)
                                 .build())
-                        .build()));
+                        .build(), Request.class));
             } else {
                 return;
             }
@@ -376,6 +424,9 @@ public class MainController implements Initializable {
                 .reqType("nav")
                 .operation("getFileList")
                 .build();
+        if (currentServerPath != null) {
+            request.setTargetPath(currentServerPath.toString());
+        }
         try {
             writeString(new Gson().toJson(request, Request.class));
         } catch (IOException e) {
@@ -384,6 +435,7 @@ public class MainController implements Initializable {
     }
 
     public void createDir(String name) {
+
         if (!Files.exists(Path.of(currentClientPath.toString(), name))) {
             try {
                 Files.createDirectories(Path.of(currentClientPath.toString(), name));
@@ -392,8 +444,9 @@ public class MainController implements Initializable {
             }
             tableView.getItems().removeAll(tableView.getItems());
             tableView.getItems().addAll(getFileList(currentClientPath));
+        } else {
+            sendInfoAlert("Папка с таким именем уже существует.");
         }
-        sendInfoAlert("Папка с таким именем уже существует.");
     }
 
     private void sendInfoAlert(String s) {
@@ -405,19 +458,210 @@ public class MainController implements Initializable {
     }
 
     public void startCreateDir(ActionEvent e) {
+        System.out.println(e.getSource());
         Dialog<String> dialog = new TextInputDialog("Введите название папки");
-        dialog.setTitle("MK DIR");
+        dialog.setTitle("Создание каталога");
         dialog.setHeaderText("Введите имя папки, которую хотите создать.");
 
         Optional<String> result = dialog.showAndWait();
-        String entered = "none.";
+        String entered = "";
 
         if (result.isPresent()) {
+            entered = result.get();
+        }
+        if (!entered.isEmpty()) {
+            if (e.getSource().equals(mkDirClient)) {
+                createDir(entered);
+            } else {
+                createDirServer(entered);
+            }
+        }
+    }
 
+    private void createDirServer(String s) {
+        if (socket == null || socket.isClosed()) {
+            connect();
+        }
+        Request request = Request.builder()
+                .reqType("nav")
+                .operation("mkDir")
+                .path(currentServerPath.toString())
+                .targetPath(currentServerPath.toString() + File.separator + s)
+                .token(clientUuid)
+                .user(User.builder()
+                        .login(clientLogin)
+                        .build())
+                .build();
+        try {
+            writeString(new Gson().toJson(request, Request.class));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void startDel(ActionEvent e) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Delete file or directory");
+        String s = "Confirm delete of file or directory.";
+        alert.setContentText(s);
+
+        Optional<ButtonType> result = alert.showAndWait();
+
+        if ((result.isPresent()) && (result.get() == ButtonType.OK)) {
+            if (e.getSource().equals(del)) {
+                deleteClient(tableView.getSelectionModel().getSelectedItem().getFileName());
+            } else {
+                deleteServer(tableServerView.getSelectionModel().getSelectedItem().getFileName());
+            }
+
+        }
+
+    }
+
+    private void deleteServer(String s) {
+        if (socket == null || socket.isClosed()) {
+            connect();
+        }
+        Request request = Request.builder()
+                .reqType("nav")
+                .operation("del")
+                .path(currentServerPath.toString())
+                .targetPath(currentServerPath.toString() + File.separator + s)
+                .token(clientUuid)
+                .user(User.builder()
+                        .login(clientLogin)
+                        .build())
+                .build();
+        try {
+            writeString(new Gson().toJson(request, Request.class));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void deleteClient(String s) {
+        if (Files.exists(Path.of(currentClientPath.toString(), s))) {
+            try {
+                Files.delete(Path.of(currentClientPath.toString(), s));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        tableView.getItems().removeAll(tableView.getItems());
+        tableView.getItems().addAll(getFileList(currentClientPath));
+    }
+
+    public void startRename(ActionEvent e) {
+        Dialog<String> dialog = new TextInputDialog("Введите новое имя");
+        dialog.setTitle("Переименовать");
+        dialog.setHeaderText("Введите новон имя для файла или папки.");
+
+        Optional<String> result = dialog.showAndWait();
+        String entered = "";
+
+        if (result.isPresent()) {
             entered = result.get();
         }
 
-        createDir(entered);
+        if (!entered.isEmpty()) {
+            if (e.getSource().equals(renClient)) {
+                renameClient(tableView.getSelectionModel().getSelectedItem().getFileName(), entered);
+            } else {
+                renameServer(tableServerView.getSelectionModel().getSelectedItem().getFileName(), entered);
+            }
+        }
+    }
+
+    private void renameServer(String fileName, String newFileName) {
+        if (socket == null || socket.isClosed()) {
+            connect();
+        }
+        Request request = Request.builder()
+                .reqType("nav")
+                .operation("ren")
+                .path(currentServerPath.toString())
+                .srcPath(currentServerPath.toString() + File.separator + fileName)
+                .targetPath(currentServerPath.toString() + File.separator + newFileName)
+                .token(clientUuid)
+                .user(User.builder()
+                        .login(clientLogin)
+                        .build())
+                .build();
+        try {
+            writeString(new Gson().toJson(request, Request.class));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private void renameClient(String fileName, String newFileName) {
+        if (Files.exists(Path.of(currentClientPath.toString(), fileName))) {
+            try {
+                Files.move(Path.of(currentClientPath.toString(), fileName),
+                        Path.of(currentClientPath.toString(), newFileName), StandardCopyOption.REPLACE_EXISTING);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        tableView.getItems().removeAll(tableView.getItems());
+        tableView.getItems().addAll(getFileList(currentClientPath));
+    }
+
+    public void uploadFile(ActionEvent e) {
+        if (socket == null || socket.isClosed()) {
+            connect();
+        }
+
+            String filename = tableView.getSelectionModel().getSelectedItem().getFileName();
+            File file = new File(currentClientPath + File.separator + filename);
+
+            if (!file.exists()) {
+                try {
+                    throw new FileNotFoundException();
+                } catch (FileNotFoundException exception) {
+                    exception.printStackTrace();
+                }
+            }
+
+            Request request = Request.builder()
+                    .reqType("file")
+                    .operation("upload")
+                    .fileLength(file.length())
+                    .path(currentServerPath.toString())
+                    .targetPath(currentServerPath.toString() + File.separator + tableView.getSelectionModel().getSelectedItem().getFileName())
+                    .token(clientUuid)
+                    .user(User.builder()
+                            .login(clientLogin)
+                            .build())
+                    .build();
+
+
+
+
+    }
+
+    public void downloadFile(ActionEvent e) {
+        if (socket == null || socket.isClosed()) {
+            connect();
+        }
+        if (Files.exists(Path.of(currentClientPath.toString() + File.separator + tableView.getSelectionModel().getSelectedItem().getFileName()))) {
+            Request request = Request.builder()
+                    .reqType("file")
+                    .operation("download")
+                    .path(currentServerPath.toString())
+                    .targetPath(currentServerPath.toString() + File.separator + tableView.getSelectionModel().getSelectedItem().getFileName())
+                    .token(clientUuid)
+                    .user(User.builder()
+                            .login(clientLogin)
+                            .build())
+                    .build();
+            try {
+                writeString(new Gson().toJson(request, Request.class));
+            } catch (IOException exception) {
+                exception.printStackTrace();
+            }
+        }
 
 
     }

@@ -1,5 +1,6 @@
 package com.gb.trjamich.project.cloudstorage;
 
+import com.gb.trjamich.project.cloudstorage.handlers.FilesHandler;
 import com.gb.trjamich.project.cloudstorage.handlers.NavigateHandler;
 import com.gb.trjamich.project.cloudstorage.handlers.SQLHandler;
 import com.gb.trjamich.project.cloudstorage.handlers.AuthHandler;
@@ -41,7 +42,8 @@ public class ServerApp {
                                     //new DelimiterBasedFrameDecoder(8192, Delimiters.lineDelimiter()),
                                     new StringEncoder(CharsetUtil.UTF_8),
                                     new AuthHandler(),
-                                    new NavigateHandler()
+                                    new NavigateHandler(),
+                                    new FilesHandler()
                                     //new DownloadHandler()
                             );
                         }

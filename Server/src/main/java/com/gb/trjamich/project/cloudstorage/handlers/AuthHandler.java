@@ -49,7 +49,7 @@ public class AuthHandler extends ChannelInboundHandlerAdapter {
 
                 } else {
                     System.out.println("login fault");
-                    utils.sendResponse(ctx, utils.authFaultResponse("Wrong login or password", request));
+                    utils.sendResponse(ctx, utils.faultResponse("Wrong login or password", request));
                 }
             } else if ("register".equals(request.getOperation())) {
                 if (SQLHandler.registration(
@@ -59,7 +59,7 @@ public class AuthHandler extends ChannelInboundHandlerAdapter {
                     utils.sendResponse(ctx, utils.authOkResponse(request));
 
                 } else {
-                    utils.sendResponse(ctx, utils.authFaultResponse("Login or nickname already exist", request));
+                    utils.sendResponse(ctx, utils.faultResponse("Login or nickname already exist", request));
                 }
             } else if ("logout".equals(request.getOperation())) {
                 users.remove(request.getUser().getLogin());
@@ -70,7 +70,7 @@ public class AuthHandler extends ChannelInboundHandlerAdapter {
             ctx.fireChannelRead(request);
         } else {
             System.out.println(users.get(request.getUser().getLogin()));
-            utils.sendResponse(ctx,utils.authFaultResponse("Wrong token for user", request));
+            utils.sendResponse(ctx,utils.faultResponse("Wrong token for user", request));
         }
         System.out.println("read end");
     }

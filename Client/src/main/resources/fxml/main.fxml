@@ -38,9 +38,9 @@
             <Button alignment="CENTER" text="C"/>
             <Button alignment="CENTER" text="P"/>
             <Button alignment="CENTER" text="M"/>
-            <Button alignment="CENTER" text="R"/>
+            <Button fx:id="renClient" alignment="CENTER" text="R" onAction="#startRename"/>
             <Button fx:id="mkDirClient" alignment="CENTER" text="Mk" onAction="#startCreateDir"/>
-            <Button alignment="CENTER" text="D"/>
+            <Button fx:id="del" alignment="CENTER" text="D" onAction="#startDel"/>
         </HBox>
         <HBox alignment="CENTER_RIGHT">
             <Label text="Search: " style="-fx-font-size: 14"/>
@@ -51,9 +51,9 @@
             <Button alignment="CENTER" text="C"/>
             <Button alignment="CENTER" text="P"/>
             <Button alignment="CENTER" text="M"/>
-            <Button alignment="CENTER" text="R"/>
-            <Button alignment="CENTER" text="Mk"/>
-            <Button alignment="CENTER" text="D"/>
+            <Button fx:id="renSrv" alignment="CENTER" text="R" onAction="#startRename"/>
+            <Button fx:id="mkDirServer" alignment="CENTER" text="Mk" onAction="#startCreateDir"/>
+            <Button fx:id="delSrv" alignment="CENTER" text="D" onAction="#startDel"/>
         </HBox>
         <HBox alignment="CENTER_RIGHT">
             <Label text="Search: " style="-fx-font-size: 14"/>
@@ -84,7 +84,7 @@
             </TableView>
         </HBox>
         <VBox spacing="10" alignment="CENTER">
-            <Button contentDisplay="TOP" mnemonicParsing="false" minWidth="85" text="Upload">
+            <Button contentDisplay="TOP" mnemonicParsing="false" minWidth="85" text="Upload" onAction="#uploadFile">
                 <graphic>
                     <ImageView fitWidth="80" fitHeight="30" pickOnBounds="true" preserveRatio="true">
                         <image>
@@ -93,7 +93,7 @@
                     </ImageView>
                 </graphic>
             </Button>
-            <Button contentDisplay="TOP" mnemonicParsing="false" text="Download">
+            <Button contentDisplay="TOP" mnemonicParsing="false" text="Download" onAction="#downloadFile">
                 <graphic>
                     <ImageView fitWidth="80" fitHeight="30" pickOnBounds="true" preserveRatio="true">
                         <image>
